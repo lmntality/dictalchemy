@@ -89,6 +89,19 @@ class OneToManyChild(Base):
         self.name = name
 
 
+class OneToManyChildWithSet(Base):
+
+    __tablename__ = 'onetomanychildwithset'
+
+    id = Column(Integer, primary_key=True)
+    parent_id = Column(Integer, ForeignKey('onetomanyparentwithset.id'))
+
+    name = Column(String)
+
+    def __init__(self, name):
+        self.name = name
+
+
 class OneToManyParent(Base):
 
     __tablename__ = 'onetomanyparent'
@@ -102,6 +115,22 @@ class OneToManyParent(Base):
     child = relationship(OneToManyChild,
                          primaryjoin=_child_id == OneToManyChild.id,
                          backref=backref('parent'))
+
+    def __init__(self, name):
+        self.name = name
+
+
+class OneToManyParentWithSet(Base):
+
+    __tablename__ = 'onetomanyparentwithset'
+
+    id = Column(Integer, primary_key=True)
+
+    name = Column(String)
+
+    children = relationship('OneToManyChildWithSet',
+        primaryjoin=OneToManyChildWithSet.parent_id == id,
+        backref=backref('parent'), collection_class=set)
 
     def __init__(self, name):
         self.name = name

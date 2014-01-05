@@ -6,7 +6,9 @@ from dictalchemy.tests import (
     NamedOtherColumnName,
     NamedWithSynonym,
     OneToManyChild,
+    OneToManyChildWithSet,
     OneToManyParent,
+    OneToManyParentWithSet,
     M2mLeft,
     M2mRight,
     MultipleChildParent,
@@ -97,6 +99,28 @@ class TestAsdict(TestCase):
         assert parent.asdict(follow=['child']) == {'id': parent.id,
                                                    'name': parent.name,
                                                    'child': child.asdict()}
+
+    def test_one_to_many_follow_with_set(self):
+        child_1 = OneToManyChildWithSet('child1')
+        child_2 = OneToManyChildWithSet('child2')
+        parent = OneToManyParentWithSet('parent')
+        parent.children.add(child_1)
+        parent.children.add(child_2)
+        self.session.add(parent)
+        self.session.commit()
+        result = parent.asdict(follow=['children'])
+        children = result.pop('children')
+        assert result == {
+                'id': parent.id,
+                'name': parent.name
+            }
+
+        assert set([str(c) for c in children]) == set([
+            "{'parent_id': 1, 'id': 1, 'name': u'child1'}",
+            "{'parent_id': 1, 'id': 2, 'name': u'child2'}"
+        ])
+
+
 
     def test_many_to_many_follow(self):
         s = self.session

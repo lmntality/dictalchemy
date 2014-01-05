@@ -8,7 +8,8 @@ from __future__ import absolute_import, division
 
 from sqlalchemy.orm import (RelationshipProperty, ColumnProperty,
                             SynonymProperty)
-from sqlalchemy.orm.collections import InstrumentedList, MappedCollection
+from sqlalchemy.orm.collections import (InstrumentedList,
+    MappedCollection, InstrumentedSet)
 from sqlalchemy.orm.dynamic import AppenderMixin
 from sqlalchemy.orm.query import Query
 
@@ -193,7 +194,7 @@ def asdict(model, exclude=None, exclude_underscore=None, exclude_pk=None,
 
         if hasattr(rel, method):
             data.update({k: getattr(rel, method)(**args)})
-        elif isinstance(rel, InstrumentedList):
+        elif isinstance(rel, (InstrumentedList, InstrumentedSet)):
             children = []
             for child in rel:
                 if hasattr(child, method):
