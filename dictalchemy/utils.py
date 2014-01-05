@@ -65,11 +65,11 @@ def arg_to_dict(arg):
     Example::
 
         >>> arg_to_dict(None)
-        []
+        {}
         >>> arg_to_dict(['a', 'b'])
-        {'a':{},'b':{}}
+        {'a': {}, 'b': {}}
         >>> arg_to_dict({'a':{'only': 'id'}, 'b':{'only': 'id'}})
-        {'a':{'only':'id'},'b':{'only':'id'}}
+        {'a': {'only': 'id'}, 'b': {'only': 'id'}}
 
     :return: dict with keys and dict arguments as value
     """
